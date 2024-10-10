@@ -47,6 +47,8 @@ def unregister():
     for module in pm.get_modules(1):
         package_mgr.unload_package(module)
 
+    pm.clear_identifier(1)
+
     # 翻译
     bpy.app.translations.unregister(__name__)
 
@@ -63,6 +65,7 @@ def unregister():
         del bpy.types.Scene.plugin_path
     pass
 
+
 # bpy.app.handlers.depsgraph_update_post.append(check_for_plugin_changes)
 # bpy.app.handlers.depsgraph_update_post.remove(check_for_plugin_changes)
 
@@ -71,10 +74,17 @@ class SelfRefresh(bpy.types.Operator):
     bl_label = "Self Refresh"
 
     def execute(self, context):
-        for module in pm.get_modules(1):
-            package_mgr.unload_package(module)
+        try:
+            for module in pm.get_modules(1):
+                package_mgr.unload_package(module)
+
+            pm.clear_identifier(1)
+        except Exception as err:
+            print(f"Failed to unregister {err}")
+
         bpy.ops.script.reload()
         return {'FINISHED'}
+
 
 if __name__ == "__main__":
     pass

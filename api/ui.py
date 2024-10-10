@@ -55,8 +55,13 @@ class PluginPanel1(bpy.types.Panel):
 
         def execute(self, context):
             print("Unloading plugin...")
-            for module in pm.get_modules(1):
-                package_mgr.unload_package(module)
+            try:
+                for module in pm.get_modules(1):
+                    package_mgr.unload_package(module)
+
+                pm.clear_identifier(1)
+            except Exception as err:
+                print(f"Failed to unregister {err}")
 
             return {'FINISHED'}
 

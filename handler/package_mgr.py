@@ -61,6 +61,7 @@ def load_package(package_path):
     if hasattr(package, 'register'):
         package.register()
     pm.store_module(1, package)
+    print(f"{package_name} has been loaded.")
     try:
         load_modules_recursively(package_path, package_name)
     except Exception as e:
@@ -75,10 +76,11 @@ def load_package(package_path):
 
 
 def unload_package(package):
-    print(f"Unloading package '{package.__name__}'")
     if hasattr(package, 'unregister'):
+        print(f"unregister'{package.__name__}'")
         package.unregister()
     if package.__name__ in sys.modules:
+        print(f"del module'{package.__name__}'")
         del sys.modules[package.__name__]
 
 
@@ -89,21 +91,21 @@ def load_modules_recursively(package_path, package_name, exclude_dirs=None):
         exclude_dirs = ['.venv']
     for loader, module_name, is_pkg in pkgutil.walk_packages([package_path]):
         full_module_name = f"{package_name}.{module_name}"
-        print(f"{full_module_name} has been loaded.{package_path} {is_pkg}")
+        print(f"{package_path}.{full_module_name} has been loaded. is_pkg:{is_pkg}")
 
         module = importlib.import_module(full_module_name)
         if hasattr(module, 'register'):
             module.register()
         pm.store_module(1, module)
-        # try:
-        #     if is_pkg:
-        #         # 如果是包，递归加载子包
-        #         sub_package_path = os.path.join(package_path, module_name)
-        #         print(f"{sub_package_path} has been loaded.{package_path} {is_pkg}")
-        #         if not any(sub_dir in sub_package_path for sub_dir in exclude_dirs):
-        #             load_modules_recursively(sub_package_path, full_module_name, exclude_dirs)
-        # except Exception as e:
-        #     print(f"An error occurred while trying to load the submodules of '{package_name}': {e}")
+        try:
+            if is_pkg:
+                # 如果是包，递归加载子包
+                sub_package_path = os.path.join(package_path, module_name)
+                print(f"{sub_package_path} has been loaded.{package_path} {is_pkg}")
+                if not any(sub_dir in sub_package_path for sub_dir in exclude_dirs):
+                    load_modules_recursively(sub_package_path, full_module_name, exclude_dirs)
+        except Exception as e:
+            print(f"An error occurred while trying to load the submodules of '{package_name}': {e}")
 
 
 def is_package(path):
