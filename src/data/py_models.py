@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2024, https://github.com/skys-mission and EcceTal
-# This file is part of Plugin DEV Helper for Blender.
+# Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
 import importlib
 import importlib
 
@@ -60,45 +59,45 @@ def clear_all():
     """清空所有存储的模块"""
     module_registry.clear()
 
-
-# 使用示例
-if __name__ == "__main__":
-    import math
-    import random
-    import sys
-    import os
-
-    # 存储模块
-    store_module("math_modules", math)
-    store_module("math_modules", random)
-    store_module("system_modules", sys)
-    store_module("system_modules", os)
-
-    # 打印存储的模块
-    print("Stored modules:")
-    for identifier, modules in module_registry.items():
-        print(f"Identifier: {identifier}")
-        for module in modules:
-            print(f"  - {module.__name__}")
-
-    # 覆盖已存在的模块
-    store_module("math_modules", math)  # 这不会创建重复
-    print("\nAfter storing math again:")
-    for module in get_modules("math_modules"):
-        print(f"- {module.__name__}")
-
-    # 删除特定模块
-    remove_module("math_modules", "random")
-    print("\nAfter removing random module:")
-    for module in get_modules("math_modules"):
-        print(f"- {module.__name__}")
-
-    # 清空特定标识符的模块
-    clear_identifier("system_modules")
-    print("\nAfter clearing system_modules:")
-    print(module_registry)
-
-    # 清空所有模块
-    clear_all()
-    print("\nAfter clearing all modules:")
-    print(module_registry)  # 应该是空字典
+#
+# # 使用示例
+# if __name__ == "__main__":
+#     import math
+#     import random
+#     import sys
+#     import os
+#
+#     # 存储模块
+#     store_module("math_modules", math)
+#     store_module("math_modules", random)
+#     store_module("system_modules", sys)
+#     store_module("system_modules", os)
+#
+#     # 打印存储的模块
+#     print("Stored modules:")
+#     for identifier, modules in module_registry.items():
+#         print(f"Identifier: {identifier}")
+#         for module in modules:
+#             print(f"  - {module.__name__}")
+#
+#     # 覆盖已存在的模块
+#     store_module("math_modules", math)  # 这不会创建重复
+#     print("\nAfter storing math again:")
+#     for module in get_modules("math_modules"):
+#         print(f"- {module.__name__}")
+#
+#     # 删除特定模块
+#     remove_module("math_modules", "random")
+#     print("\nAfter removing random module:")
+#     for module in get_modules("math_modules"):
+#         print(f"- {module.__name__}")
+#
+#     # 清空特定标识符的模块
+#     clear_identifier("system_modules")
+#     print("\nAfter clearing system_modules:")
+#     print(module_registry)
+#
+#     # 清空所有模块
+#     clear_all()
+#     print("\nAfter clearing all modules:")
+#     print(module_registry)  # 应该是空字典
