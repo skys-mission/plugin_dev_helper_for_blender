@@ -46,11 +46,11 @@ Detection interval: 1.5 seconds)
 ## Operating System Compatibility
 
 - Currently Supported
-    - Windows
+    - windows-x64
 - Planned Support
-    - MacOS (Currently no Mac device available)
+    - macos-arm64 (Currently no Mac device available)
 - Not Planned
-    - Linux (Unless major changes occur, no plans to support)
+    - linux (Unless major changes occur, no plans to support)
 
 Based on the provided documentation, here's the English translation of the key references for Blender addon development:
 
