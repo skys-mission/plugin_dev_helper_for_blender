@@ -1,40 +1,72 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2024, https://github.com/skys-mission and EcceTal
-# This file is part of Plugin DEV Helper for Blender.
+# Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
 import bpy
 
-from .translator import translations_dict
-from .common import scene
-from .api import ui
-from .handler import package_mgr
-from .data import py_models as pm
+from .src.models.ui36 import is_auto_update_radio
+from .src.handler.watch_handler import stop_watch
 
+from .src.api.bridge import Bridge
+from .common import scene
+from .src.models import ui36
+from .src.handler import package_mgr
+from .src.data import py_models as pm
+
+# 插件信息字典，用于存储插件的元数据
 bl_info = {
+    # 插件名称
     "name": "Plugin DEV Helper",
-    "author": "EcceTal",
-    "version": (0, 1),
+    # 插件作者
+    "author": "SoyMilkWhisky, github.com/skys-mission",
+    # 插件版本号
+    "version": (0, 2),
+    # 兼容的Blender版本
     "blender": (3, 6, 0),
+    # 插件在Blender界面中的位置
     "location": "View3D > N-Panel  > Plugin DEV Helper",
+    # 插件描述
     "description": "Dynamically load, unload, and auto-reload plugins.",
+    # 插件类别
     "category": "Development",
+    "doc_url": "https://whiskyai.xyz/doc/blender/addon/plugin_dev_helper_for_blender",
+    "tracker_url": "https://github.com/skys-mission/plugin_dev_helper_for_blender/issues",
+    "warning": "This plugin is designed for users with software development expertise."
 }
+
+addon_name = __name__
+bridge = Bridge(addon_name)
+
+ui_classes = (
+    # ui36.SelfRefresh, 早期测试的时候写的自加载 子模块有问题，后面改造后可能有BUG，先注释掉
+    # ui36.GlobalSettings,
+    ui36.PluginPanel1,
+    ui36.PluginPanel1.LoadPlugin,
+    ui36.PluginPanel1.UnloadPlugin,
+    ui36.PluginPanel1.ReloadPlugin,
+    ui36.OpenURLOperator
+)
 
 
 def register():
     try:
-        # 更新子模块
-        package_mgr.reload_addon_submodules(__name__)
-        # 翻译
-        bpy.app.translations.register(__name__, translations_dict)
+
+        global bridge
+        global addon_name
+        print(f"bridge ")
+
+        # 更新子模块 TODO 早期DEBUG的时候加的，忘记为什么要调用了
+        package_mgr.reload_addon_submodules(addon_name)
+
+        # 加载翻译
+        bridge.register_translations(bridge.get_translations_dict())
+
         # Blender Scene
         bpy.types.Scene.plugin_path = scene.plugin_path
-        # UI
-        bpy.utils.register_class(SelfRefresh)
-        bpy.utils.register_class(ui.GlobalSettings)
-        # UI
-        bpy.utils.register_class(ui.PluginPanel1)
-        bpy.utils.register_class(ui.PluginPanel1.LoadPlugin)
-        bpy.utils.register_class(ui.PluginPanel1.UnloadPlugin)
+        bpy.types.Scene.is_auto_update = is_auto_update_radio
+
+        # 注册UI
+        for cls in ui_classes:
+            bridge.register_class(cls)
+
     except Exception as err:
         print(f"Failed to register {err}")
         unregister()
@@ -43,47 +75,36 @@ def register():
 
 
 def unregister():
+    global bridge
+    global addon_name
+
+    # 停止所有协程
+    stop_watch()
+
     # 清除用户模块
     for module in pm.get_modules(1):
         package_mgr.unload_package(module)
 
+    # 清除所有已经加载的模块 TODO 支持多模组时需要修改
     pm.clear_identifier(1)
 
-    # 翻译
-    bpy.app.translations.unregister(__name__)
-
-    # UI
-    bpy.utils.unregister_class(ui.GlobalSettings)
-    bpy.utils.unregister_class(SelfRefresh)
-
-    bpy.utils.unregister_class(ui.PluginPanel1)
-    bpy.utils.unregister_class(ui.PluginPanel1.LoadPlugin)
-    bpy.utils.unregister_class(ui.PluginPanel1.UnloadPlugin)
+    # 卸载所有UI
+    for cls in ui_classes:
+        bridge.unregister_class(cls)
 
     # 删除Blender Scene
     if hasattr(bpy.types.Scene, "plugin_path"):
         del bpy.types.Scene.plugin_path
+    if hasattr(bpy.types.Scene, "is_auto_update"):
+        del bpy.types.Scene.is_auto_update
+
+    # 卸载翻译
+    bridge.unregister_translations()
     pass
 
 
 # bpy.app.handlers.depsgraph_update_post.append(check_for_plugin_changes)
 # bpy.app.handlers.depsgraph_update_post.remove(check_for_plugin_changes)
-
-class SelfRefresh(bpy.types.Operator):
-    bl_idname = "self.refresh"
-    bl_label = "Self Refresh"
-
-    def execute(self, context):
-        try:
-            for module in pm.get_modules(1):
-                package_mgr.unload_package(module)
-
-            pm.clear_identifier(1)
-        except Exception as err:
-            print(f"Failed to unregister {err}")
-
-        bpy.ops.script.reload()
-        return {'FINISHED'}
 
 
 if __name__ == "__main__":
