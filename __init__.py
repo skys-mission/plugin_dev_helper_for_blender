@@ -16,7 +16,7 @@ bl_info = {
     # 插件名称
     "name": "Plugin DEV Helper",
     # 插件作者
-    "author": "SoyMilkWhisky",
+    "author": "SoyMilkWhisky, github.com/skys-mission",
     # 插件版本号
     "version": (0, 2),
     # 兼容的Blender版本
@@ -27,6 +27,9 @@ bl_info = {
     "description": "Dynamically load, unload, and auto-reload plugins.",
     # 插件类别
     "category": "Development",
+    "doc_url": "https://whiskyai.xyz/doc/blender/addon/plugin_dev_helper_for_blender",
+    "tracker_url": "https://github.com/skys-mission/plugin_dev_helper_for_blender/issues",
+    "warning": "This plugin is designed for users with software development expertise."
 }
 
 addon_name = __name__

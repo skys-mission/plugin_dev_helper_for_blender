@@ -11,6 +11,8 @@ Other languages: [简体中文](README_zh.md), (Currently unable to translate mo
   * [Feature Plans](#feature-plans)
   * [Blender Version Compatibility](#blender-version-compatibility)
   * [Operating System Compatibility](#operating-system-compatibility)
+* [Blender Addon Development References](#blender-addon-development-references)
+* [How to Install in Higher Versions](#how-to-install-in-higher-versions)
 * [Special Note](#special-note)
 * [Disclaimer](#disclaimer)
 * [Others](#others)
@@ -49,6 +51,20 @@ Detection interval: 1.5 seconds)
     - MacOS (Currently no Mac device available)
 - Not Planned
     - Linux (Unless major changes occur, no plans to support)
+
+Based on the provided documentation, here's the English translation of the key references for Blender addon development:
+
+# Blender Addon Development References
+
+Addon Meta Information: https://developer.blender.org/docs/handbook/addons/addon_meta_info/
+
+Getting Started: https://docs.blender.org/manual/en/latest/advanced/scripting/index.html 
+
+Blender API Documentation: https://docs.blender.org/api/current/
+
+# How to Install in Higher Versions
+
+Reference: https://docs.blender.org/manual/en/4.2/editors/preferences/addons.html#prefs-extensions-install-legacy-addon
 
 # Special Note
 

@@ -10,6 +10,8 @@
   * [功能计划](#功能计划)
   * [Blender版本适配](#blender版本适配)
   * [适配的操作系统](#适配的操作系统)
+* [Blender插件开发参考](#blender插件开发参考)
+* [高版本如何安装](#高版本如何安装)
 * [特别提醒](#特别提醒)
 * [免责声明](#免责声明)
 * [其它](#其它)
@@ -47,6 +49,18 @@
     - MacOS (本人手上暂无Mac设备)
 - 不计划支持
     - Linux（除非出现重大变故，否则不计划支持）
+
+# Blender插件开发参考
+
+Addon元信息：https://developer.blender.org/docs/handbook/addons/addon_meta_info/
+
+开发入门：https://docs.blender.org/manual/zh-hans/4.3/advanced/scripting/index.html
+
+Blender API文档：https://docs.blender.org/api/current/
+
+# 高版本如何安装
+
+参考：https://docs.blender.org/manual/zh-hans/4.2/editors/preferences/addons.html#prefs-extensions-install-legacy-addon
 
 # 特别提醒
 
