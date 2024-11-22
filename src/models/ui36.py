@@ -54,14 +54,14 @@ class PluginPanel1(bpy.types.Panel):
             :return: 返回一个集合，表示操作完成。
             """
             print("Plugin 1 Reloading...")
-            try:
-                for module in pm.get_modules(1):
+            for module in pm.get_modules(1):
+                try:
                     package_mgr.unload_package(module)
+                except Exception as err:
+                    print(f"Failed to unload plugin: {err}")
 
-                pm.clear_identifier(1)
+            pm.clear_identifier(1)
 
-            except Exception as err:
-                print(f"Failed to reload plugin: {err}")
             print("plugin 1 Reload completed")
             return {'FINISHED'}
 
@@ -73,13 +73,16 @@ class PluginPanel1(bpy.types.Panel):
         bl_description = "Perform the operation of reloading plugins"
 
         def execute(self, context):
-            try:
-                for module in pm.get_modules(1):
+            for module in pm.get_modules(1):
+                try:
                     package_mgr.unload_package(module)
+                except Exception as err:
+                    print(f"Failed to unload plugin: {err}")
 
+            try:
                 pm.clear_identifier(1)
             except Exception as err:
-                print(f"Failed to unregister {err}")
+                print(f"Failed to unload {err}")
 
             package_mgr.load_package(context.scene.plugin_path)
             return {'FINISHED'}

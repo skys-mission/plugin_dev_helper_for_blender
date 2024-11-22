@@ -18,7 +18,7 @@ bl_info = {
     # 插件作者
     "author": "SoyMilkWhisky, github.com/skys-mission",
     # 插件版本号
-    "version": (0, 2),
+    "version": (0, 2, 1),
     # 兼容的Blender版本
     "blender": (3, 6, 0),
     # 插件在Blender界面中的位置
@@ -76,21 +76,32 @@ def register():
 
 def unregister():
     global bridge
-    global addon_name
 
     # 停止所有协程
-    stop_watch()
+    try:
+        stop_watch()
+    except Exception as err:
+        print(f"unregister error: {err}")
 
     # 清除用户模块
     for module in pm.get_modules(1):
-        package_mgr.unload_package(module)
+        try:
+            package_mgr.unload_package(module)
+        except Exception as err:
+            print(f"unregister error: {err}")
 
     # 清除所有已经加载的模块 TODO 支持多模组时需要修改
-    pm.clear_identifier(1)
+    try:
+        pm.clear_identifier(1)
+    except Exception as err:
+        print(f"unregister error: {err}")
 
     # 卸载所有UI
     for cls in ui_classes:
-        bridge.unregister_class(cls)
+        try:
+            bridge.unregister_class(cls)
+        except Exception as err:
+            print(f"unregister error: {err}")
 
     # 删除Blender Scene
     if hasattr(bpy.types.Scene, "plugin_path"):

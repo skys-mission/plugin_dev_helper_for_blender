@@ -28,6 +28,7 @@ Other languages: [简体中文](README_zh.md), (Currently unable to translate mo
 | Single Plugin Package Load/Unload                 | Supported     | Already Supported    |
 | Auto Reload on Change Detection (Not Recommended) | Supported     | Already Supported    |
 | Multi-Plugin Management                           | Not Supported | No Plan              |
+| Support for plugin packaging                      | Not supported | Planned              |
 
 Reloading will execute on the main thread. Through my testing, no crashes occurred, but caution is still advised. (
 Detection interval: 1.5 seconds)
@@ -58,7 +59,7 @@ Based on the provided documentation, here's the English translation of the key r
 
 Addon Meta Information: https://developer.blender.org/docs/handbook/addons/addon_meta_info/
 
-Getting Started: https://docs.blender.org/manual/en/latest/advanced/scripting/index.html 
+Getting Started: https://docs.blender.org/manual/en/latest/advanced/scripting/index.html
 
 Blender API Documentation: https://docs.blender.org/api/current/
 
