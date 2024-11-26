@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
-import importlib
-import importlib
 
 # 主数据结构：字典的值是列表
 module_registry = {}

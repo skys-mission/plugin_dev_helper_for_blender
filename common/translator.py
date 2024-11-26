@@ -19,6 +19,8 @@ translation_map = {
     ("*", "Perform the operation of uninstalling plugins"): "执行卸载插件的操作",
     ("*", "Perform the operation of reloading plugins"): "执行重载插件的操作",
     ("*", "Enable/Disable Automatic check for changes and reload(1.5s)"): "开启/关闭 自动检查变化重载(1.5s)",
+    ("*", "Global Setting Panel"): "全局设置",
+    ("Operator", "Toggle System Console"): "切换系统控制台",
     ("Operator", "user doc."): "用户文档",
     ("Operator", "open source"): "开源地址",
     ("Operator", "Load Plugin 1"): "加载插件 1",

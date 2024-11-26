@@ -10,6 +10,7 @@ import bpy
 from ..handler import package_mgr
 from ..data import py_models as pm
 from ..handler.watch_handler import toggle_watcher, reload_modules_callback
+from ..util.logger import Log
 
 
 class PluginPanel1(bpy.types.Panel):
@@ -35,7 +36,7 @@ class PluginPanel1(bpy.types.Panel):
             :param context: Blender上下文，包含了当前场景、对象等信息。
             :return: 返回一个集合，表示操作完成。
             """
-            print("Loading plugin...")
+            Log.info(f"Load plugin:{context.scene.plugin_path}")
             package_mgr.load_package(context.scene.plugin_path)
 
             return {'FINISHED'}
@@ -53,16 +54,16 @@ class PluginPanel1(bpy.types.Panel):
             :param context: Blender上下文，包含了当前场景、对象等信息。
             :return: 返回一个集合，表示操作完成。
             """
-            print("Plugin 1 Reloading...")
+            Log.info(f"Unload plugin:{context.scene.plugin_path}")
             for module in pm.get_modules(1):
                 try:
                     package_mgr.unload_package(module)
                 except Exception as err:
-                    print(f"Failed to unload plugin: {err}")
+                    Log.warning(f"Failed to unload plugin: {err}")
 
             pm.clear_identifier(1)
 
-            print("plugin 1 Reload completed")
+            Log.info(f"Plugin {context.scene.plugin_path} unloaded")
             return {'FINISHED'}
 
         pass
@@ -77,12 +78,12 @@ class PluginPanel1(bpy.types.Panel):
                 try:
                     package_mgr.unload_package(module)
                 except Exception as err:
-                    print(f"Failed to unload plugin: {err}")
+                    Log.warning(f"Failed to unload plugin: {err}")
 
             try:
                 pm.clear_identifier(1)
             except Exception as err:
-                print(f"Failed to unload {err}")
+                Log.warning(f"Failed to clear identifier: {err}")
 
             package_mgr.load_package(context.scene.plugin_path)
             return {'FINISHED'}
@@ -146,6 +147,34 @@ is_auto_update_radio = bpy.props.BoolProperty(
     default=False,
     update=lambda self, context: toggle_watcher(reload_modules_callback)
 )
+
+# 定义一个全局设置面板类，继承自bpy.types.Panel
+class GlobalSettingPanel(bpy.types.Panel):
+    # 设置面板的标签、空间类型、区域类型和分类
+    bl_label = "Global Setting Panel"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = "Addon DEV Helper"
+
+    # 定义一个切换控制台的运算符类，继承自bpy.types.Operator
+    class ToggleConsole(bpy.types.Operator):
+        # 设置运算符的ID名称和标签
+        bl_idname = "wm.toggle_system_console"
+        bl_label = "Toggle System Console"
+
+        # 定义运算符的执行方法
+        def execute(self, context):
+            # 调用Blender内置的控制台切换操作
+            bpy.ops.wm.console_toggle()
+            # 返回'FINISHED'表示运算符执行完成
+            return {'FINISHED'}
+
+    # 绘制面板内容的方法
+    def draw(self, context):
+        # 获取面板的布局
+        layout = self.layout
+        # 在布局中添加一个运算符按钮，关联到系统控制台切换运算符
+        layout.operator("wm.toggle_system_console", text="Toggle System Console")
 
 #
 # class SelfRefresh(bpy.types.Operator):
