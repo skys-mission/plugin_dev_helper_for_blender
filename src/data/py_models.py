@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
-
+"""
+动态加载库管理
+"""
 # 主数据结构：字典的值是列表
 module_registry = {}
 
@@ -16,7 +18,10 @@ def store_module(identifier, module):
         module_registry[identifier] = []
 
     # 如果模块已存在，先移除它
-    module_registry[identifier] = [m for m in module_registry[identifier] if m.__name__ != module.__name__]
+    module_registry[identifier] = [
+        m for m in module_registry[identifier]
+        if m.__name__ != module.__name__
+    ]
 
     # 添加新模块到列表末尾
     module_registry[identifier].append(module)
@@ -40,7 +45,10 @@ def remove_module(identifier, module_name):
     :param module_name: 要删除的模块名称
     """
     if identifier in module_registry:
-        module_registry[identifier] = [m for m in module_registry[identifier] if m.__name__ != module_name]
+        module_registry[identifier] = [
+            m for m in module_registry[identifier]
+            if m.__name__ != module_name
+        ]
 
 
 def clear_identifier(identifier):

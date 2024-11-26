@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
+"""
+包管理
+"""
 import os
 import pkgutil
 import sys
@@ -7,6 +10,7 @@ import importlib
 
 from ..data import py_models as pm
 from ..util.logger import Log
+
 
 def reload_addon(addon_name):
     """重新加载指定的插件及其所有子模块"""
@@ -49,15 +53,17 @@ def reload_addon_submodules(addon_name):
 
         # 如果有子模块被重新加载，则打印这些子模块的名称
         if reloaded_modules:
-            Log.info(f"The following submodules of '{addon_name}' have been reloaded:")
+            Log.info(f"The following submodules of '{addon_name}' "
+                     f"have been reloaded:")
             for module_name in reloaded_modules:
                 Log.info(f"  - {module_name}")
         else:
             # 如果没有找到任何子模块进行重新加载，打印提示信息
             Log.info(f"No submodules of '{addon_name}' were found to reload.")
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         # 捕获并打印在重新加载过程中发生的任何异常
-        Log.warning(f"An warning occurred while trying to reload the submodules of '{addon_name}': {e}")
+        Log.warning(f"An warning occurred while "
+                    f"trying to reload the submodules of '{addon_name}': {e}")
 
 
 def load_package(package_path):
@@ -72,9 +78,9 @@ def load_package(package_path):
     """
     package_path = os.path.normpath(package_path)
     package_name = get_package_name(package_path)
-    newPath = os.path.dirname(package_path)
-    if newPath not in sys.path:
-        sys.path.append(newPath)
+    new_path = os.path.dirname(package_path)
+    if new_path not in sys.path:
+        sys.path.append(new_path)
     if package_name in sys.modules:
         sys.path.append(package_path)
     package = importlib.import_module(package_name)
@@ -84,8 +90,9 @@ def load_package(package_path):
     Log.info(f"{package_name} has been loaded.")
     try:
         load_modules_recursively(package_path, package_name)
-    except Exception as err:
-        Log.warning(f"An warning occurred while trying to load the submodules of '{package_name}': {err}")
+    except Exception as err:  # pylint: disable=broad-exception-caught
+        Log.warning(f"An warning occurred while "
+                    f"trying to load the submodules of '{package_name}': {err}")
         package.unregister()
     # for _, module_name, _ in pkgutil.walk_packages([package_path]):
     #     full_module_name = f"{package_name}.{module_name}"
@@ -129,7 +136,7 @@ def load_modules_recursively(package_path, package_name, exclude_dirs=None):
     # print(sys.path)
     if exclude_dirs is None:
         exclude_dirs = ['.venv']
-    for loader, module_name, is_pkg in pkgutil.walk_packages([package_path]):
+    for _, module_name, is_pkg in pkgutil.walk_packages([package_path]):
         full_module_name = f"{package_name}.{module_name}"
         Log.info(f"{package_path}.{full_module_name} has been loaded. is_pkg:{is_pkg}")
 
@@ -144,8 +151,9 @@ def load_modules_recursively(package_path, package_name, exclude_dirs=None):
                 Log.info(f"{sub_package_path} is_pkg:{is_pkg}")
                 if not any(sub_dir in sub_package_path for sub_dir in exclude_dirs):
                     load_modules_recursively(sub_package_path, full_module_name, exclude_dirs)
-        except Exception as err:
-            Log.warning(f"An error occurred while trying to load the submodules of '{full_module_name}': {err}")
+        except Exception as err:  # pylint: disable=broad-exception-caught
+            Log.warning(f"An error occurred while "
+                        f"trying to load the submodules of '{full_module_name}': {err}")
 
 
 def is_package(path):

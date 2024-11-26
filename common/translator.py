@@ -1,12 +1,29 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
-
+"""
+翻译字典
+"""
 def get_translations_dict(local):
+    """
+    根据本地化信息生成翻译字典。
+
+    此函数创建一个翻译字典，该字典将本地化信息映射到其相应的翻译内容。
+    本地化信息和翻译内容都是在函数外部定义的。
+
+    参数:
+    local: 一个包含本地化信息的键，用于获取相应的翻译内容。
+
+    返回:
+    一个字典，包含本地化信息和其对应的翻译内容。
+    """
+    # 创建翻译字典，将本地化信息映射到其翻译内容
     translations_dict = {
         local: translation_map
     }
 
+    # 返回生成的翻译字典
     return translations_dict
+
 
 
 translation_map = {
