@@ -30,8 +30,8 @@ Other languages: [简体中文](README_zh.md), (Currently unable to translate mo
 | Multi-Plugin Management                           | Not Supported | No Plan              |
 | Support for plugin packaging                      | Not supported | Planned              |
 
-Reloading will execute on the main thread. Through my testing, no crashes occurred, but caution is still advised. (
-Detection interval: 1.5 seconds)
+Automatic reloading upon detecting changes will return to the main thread for execution. Based on my testing, no crashes
+have occurred, but it should still be used with caution. (Detection interval: 1.5 seconds)
 
 ## Blender Version Compatibility
 
@@ -39,6 +39,8 @@ Detection interval: 1.5 seconds)
     - 3.6, 4.2
 - Versions That Might Work
     - Greater than or equal to 3.6
+    - The project has undergone basic testing on version 4.0 and runs normally (but this does not imply planned
+      support).
 - Planned Support
     - Next Blender LTS version
 - No Plans to Support
