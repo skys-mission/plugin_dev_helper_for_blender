@@ -18,7 +18,7 @@ bl_info = {
     # 插件作者
     "author": "SoyMilkWhisky, github.com/skys-mission",
     # 插件版本号
-    "version": (0, 2, 1),
+    "version": (0, 2, 2),
     # 兼容的Blender版本
     "blender": (3, 6, 0),
     # 插件在Blender界面中的位置
