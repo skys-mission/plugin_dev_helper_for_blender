@@ -1,5 +1,7 @@
 # Plugin DEV Helper for Blender
 
+[![Pylint](https://github.com/skys-mission/plugin_dev_helper_for_blender/actions/workflows/pylint.yml/badge.svg?branch=main)](https://github.com/skys-mission/plugin_dev_helper_for_blender/actions/workflows/pylint.yml)
+
 可以帮你加载和卸载基于目录的Blender插件包，帮助你开发Blender插件。包括动态加载功能（不推荐使用）。
 
 其它语言：[English](README.md), (Currently unable to translate more)

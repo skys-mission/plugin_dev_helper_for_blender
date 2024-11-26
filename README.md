@@ -1,5 +1,7 @@
 # Plugin DEV Helper for Blender
 
+[![Pylint](https://github.com/skys-mission/plugin_dev_helper_for_blender/actions/workflows/pylint.yml/badge.svg?branch=main)](https://github.com/skys-mission/plugin_dev_helper_for_blender/actions/workflows/pylint.yml)
+
 Helps you load and unload directory-based Blender plugin packages for Blender plugin development. Includes dynamic
 loading functionality (not recommended).
 
