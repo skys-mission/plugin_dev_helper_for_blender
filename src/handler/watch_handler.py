@@ -6,6 +6,7 @@ import os
 import threading
 import time
 
+from ..util.logger import Log
 from ..handler import package_mgr
 from ..data import py_models as pm
 
@@ -67,8 +68,8 @@ def watch_directory(path, callback):
             # 休眠一段时间再检查
             time.sleep(1.5)
 
-        except Exception as e:
-            print(f"监控时发生错误: {e}")
+        except Exception as err:
+            Log.warning(f"监控时发生错误: {err}")
             continue
 
 
@@ -76,7 +77,7 @@ def watch_directory(path, callback):
 def toggle_watcher(callback):
     global watch_thread
     global is_running
-    print(f"change run state: {bpy.context.scene.is_auto_update}")
+    Log.info(f"change watcher state: {bpy.context.scene.is_auto_update}")
     if bpy.context.scene.is_auto_update:
         # 启动监控
         if watch_thread is None:
@@ -95,16 +96,9 @@ def toggle_watcher(callback):
             if watch_thread and isinstance(watch_thread, threading.Thread):
                 watch_thread.join()
                 watch_thread = None
-        except AttributeError as e:
-            print(f"Error: {e}")
+        except Exception as err:
+            Log.warning(f"stop watcher error: {err}")
             watch_thread = None
-
-
-# 你的回调函数
-def your_callback_function():
-    # 在这里实现文件变化后要执行的操作
-    print("File changed!")
-    return None  # 确保定时器不会重复执行
 
 
 def stop_watch():
@@ -115,8 +109,8 @@ def stop_watch():
         if watch_thread and isinstance(watch_thread, threading.Thread):
             watch_thread.join()
             watch_thread = None
-    except AttributeError as e:
-        print(f"Error: {e}")
+    except AttributeError as err:
+        Log.warning(f"stop watcher error: {err}")
         watch_thread = None
 
 
@@ -125,14 +119,13 @@ def reload_modules_callback():
 
 
 def reload_modules():
-    print("auto reload modules start")
     try:
         for module in pm.get_modules(1):
             package_mgr.unload_package(module)
 
         pm.clear_identifier(1)
     except Exception as err:
-        print(f"Failed to unregister {err}")
+        Log.warning(f"Failed to unregister {err}")
 
     package_mgr.load_package(bpy.context.scene.plugin_path)
     return None

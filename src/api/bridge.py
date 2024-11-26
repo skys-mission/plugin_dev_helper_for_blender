@@ -5,12 +5,13 @@ import bpy
 
 from .local import *
 from ...common.translator import get_translations_dict
+from ..util.logger import Log
 
 
 class Bridge:
 
     def __init__(self, addon_name):
-        print(f"debug:{addon_name}")
+        Log.info(f"Bridge init. addon name:{addon_name}")
         major, minor, _ = bpy.app.version
         self.bv = (major, minor)
         self.is_blender_4_2 = self.bv >= (4, 2)
@@ -26,10 +27,8 @@ class Bridge:
 
         # 翻译
         if self.is_blender_4_2:
-            print(f"A:{get_translations_dict(LocalChinese42)}")
             bpy.app.translations.register(self.addon_name, translations_dict)
         else:
-            print(f"A:{get_translations_dict(LocalChinese36)}")
             bpy.app.translations.register(self.addon_name, translations_dict)
 
     def unregister_translations(self):

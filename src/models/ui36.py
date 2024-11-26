@@ -10,6 +10,7 @@ import bpy
 from ..handler import package_mgr
 from ..data import py_models as pm
 from ..handler.watch_handler import toggle_watcher, reload_modules_callback
+from ..util.logger import Log
 
 
 class PluginPanel1(bpy.types.Panel):
@@ -35,7 +36,7 @@ class PluginPanel1(bpy.types.Panel):
             :param context: Blender上下文，包含了当前场景、对象等信息。
             :return: 返回一个集合，表示操作完成。
             """
-            print("Loading plugin...")
+            Log.info(f"Load plugin:{context.scene.plugin_path}")
             package_mgr.load_package(context.scene.plugin_path)
 
             return {'FINISHED'}
@@ -53,16 +54,16 @@ class PluginPanel1(bpy.types.Panel):
             :param context: Blender上下文，包含了当前场景、对象等信息。
             :return: 返回一个集合，表示操作完成。
             """
-            print("Plugin 1 Reloading...")
+            Log.info(f"Unload plugin:{context.scene.plugin_path}")
             for module in pm.get_modules(1):
                 try:
                     package_mgr.unload_package(module)
                 except Exception as err:
-                    print(f"Failed to unload plugin: {err}")
+                    Log.warning(f"Failed to unload plugin: {err}")
 
             pm.clear_identifier(1)
 
-            print("plugin 1 Reload completed")
+            Log.info(f"Plugin {context.scene.plugin_path} unloaded")
             return {'FINISHED'}
 
         pass
@@ -77,12 +78,12 @@ class PluginPanel1(bpy.types.Panel):
                 try:
                     package_mgr.unload_package(module)
                 except Exception as err:
-                    print(f"Failed to unload plugin: {err}")
+                    Log.warning(f"Failed to unload plugin: {err}")
 
             try:
                 pm.clear_identifier(1)
             except Exception as err:
-                print(f"Failed to unload {err}")
+                Log.warning(f"Failed to clear identifier: {err}")
 
             package_mgr.load_package(context.scene.plugin_path)
             return {'FINISHED'}
