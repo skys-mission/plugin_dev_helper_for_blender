@@ -38,6 +38,8 @@ bridge = Bridge(addon_name)
 ui_classes = (
     # ui36.SelfRefresh, 早期测试的时候写的自加载 子模块有问题，后面改造后可能有BUG，先注释掉
     # ui36.GlobalSettings,
+    ui36.GlobalSettingPanel,
+    ui36.GlobalSettingPanel.ToggleConsole,
     ui36.PluginPanel1,
     ui36.PluginPanel1.LoadPlugin,
     ui36.PluginPanel1.UnloadPlugin,
