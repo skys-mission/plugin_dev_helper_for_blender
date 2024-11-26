@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
-
-import bpy
+"""
+Blender API桥接类，实际上在这个项目并没有价值，只是我为后续开发做的实验
+"""
+import bpy # pylint: disable=import-error
 
 from .local import *
 from ...common.translator import get_translations_dict

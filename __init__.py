@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
-import bpy
+"""
+Blender插件入口
+"""
+import bpy  # pylint: disable=import-error
 
 from .src.util.logger import Log
 from .src.models.ui36 import is_auto_update_radio
@@ -32,8 +35,8 @@ bl_info = {
     "warning": "This plugin is designed for users with software development expertise."
 }
 
-addon_name = __name__
-bridge = Bridge(addon_name)
+ADDON_NAME = __name__
+BRIDGE = Bridge(ADDON_NAME)
 
 ui_classes = (
     # ui36.SelfRefresh, 早期测试的时候写的自加载 子模块有问题，后面改造后可能有BUG，先注释掉
@@ -49,52 +52,53 @@ ui_classes = (
 
 
 def register():
+    """
+    注册函数，用于初始化和注册插件的各个部分。
+    此函数尝试执行一系列注册操作，如果操作失败，则调用unregister函数进行卸载。
+    """
     try:
 
-        global bridge
-        global addon_name
-
         # 更新子模块 TODO 早期DEBUG的时候加的，忘记为什么要调用了
-        package_mgr.reload_addon_submodules(addon_name)
+        package_mgr.reload_addon_submodules(ADDON_NAME)
 
         # 加载翻译
-        bridge.register_translations(bridge.get_translations_dict())
+        BRIDGE.register_translations(BRIDGE.get_translations_dict())
 
         # 注册UI
         for cls in ui_classes:
-            bridge.register_class(cls)
+            BRIDGE.register_class(cls)
 
         # Blender Scene
         bpy.types.Scene.plugin_path = scene.plugin_path
         bpy.types.Scene.is_auto_update = is_auto_update_radio
 
-    except Exception as err:
+    except Exception as err:  # pylint: disable=broad-exception-caught
         unregister()
         Log.raise_error(f"Failed to register {err}")
 
-    pass
-
 
 def unregister():
-    global bridge
-
+    """
+    注销或卸载插件时调用此函数。
+    该函数负责停止协程、卸载模块、删除场景属性和卸载UI类及翻译。
+    """
     # 停止所有协程
     try:
         stop_watch()
-    except Exception as err:
+    except Exception as err:  # pylint: disable=broad-exception-caught
         Log.error(f"unregister stop_watch error: {err}")
 
     # 清除用户模块
     for module in pm.get_modules(1):
         try:
             package_mgr.unload_package(module)
-        except Exception as err:
+        except Exception as err:  # pylint: disable=broad-exception-caught
             Log.error(f"unregister unload_package error: {err}")
 
     # 清除所有已经加载的模块 TODO 支持多模组时需要修改
     try:
         pm.clear_identifier(1)
-    except Exception as err:
+    except Exception as err:  # pylint: disable=broad-exception-caught
         Log.error(f"unregister clear_identifier error: {err}")
 
     # 删除Blender Scene
@@ -106,13 +110,12 @@ def unregister():
     # 卸载所有UI
     for cls in ui_classes:
         try:
-            bridge.unregister_class(cls)
-        except Exception as err:
+            BRIDGE.unregister_class(cls)
+        except Exception as err:  # pylint: disable=broad-exception-caught
             Log.error(f"unregister unregister_class error: {err}")
 
     # 卸载翻译
-    bridge.unregister_translations()
-    pass
+    BRIDGE.unregister_translations()
 
 
 # bpy.app.handlers.depsgraph_update_post.append(check_for_plugin_changes)

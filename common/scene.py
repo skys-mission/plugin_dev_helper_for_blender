@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2024, https://github.com/skys-mission and SoyMilkWhisky
 
-import bpy
+import bpy # pylint: disable=import-error
 
 plugin_path = bpy.props.StringProperty(
     name="Plugin Path",
