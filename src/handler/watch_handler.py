@@ -8,6 +8,7 @@ import threading
 import time
 import bpy  # pylint: disable=import-error
 
+from ...src.handler.package_mgr import unload_modules
 from ..util.logger import Log
 from ..handler import package_mgr
 from ..data import py_models as pm
@@ -166,6 +167,7 @@ def reload_modules_callback():
     bpy.app.timers.register(reload_modules)
 
 
+
 # 重新加载所有模块
 def reload_modules():
     """
@@ -173,17 +175,7 @@ def reload_modules():
     本函数旨在更新插件中的模块，通过卸载旧模块并加载更新后的模块实现。
     这对于确保插件在使用最新版本的模块时能够正常运行至关重要。
     """
-    try:
-        # 卸载所有需要更新的模块
-        for module in pm.get_modules(1):
-            package_mgr.unload_package(module)
-
-        # 清除标识符以准备重新加载
-        pm.clear_identifier(1)
-    except Exception as err:  # pylint: disable=broad-exception-caught
-        # 如果卸载或清除标识符过程中出现错误，记录警告
-        Log.warning(f"Failed to unregister {err}")
-
+    unload_modules(bpy.context.scene.plugin_path)
     # 加载更新后的插件包
     package_mgr.load_package(bpy.context.scene.plugin_path)
 

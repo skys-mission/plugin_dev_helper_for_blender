@@ -84,9 +84,14 @@ def load_package(package_path):
     if package_name in sys.modules:
         sys.path.append(package_path)
     package = importlib.import_module(package_name)
-    if hasattr(package, 'register'):
-        package.register()
     pm.store_module(1, package)
+    if hasattr(package, 'register'):
+        try:
+            package.register()
+        except Exception as err:  # pylint: disable=broad-exception-caught
+            if hasattr(package, 'unregister'):
+                package.unregister()
+            Log.raise_error(f"Failed to register {package_name}: {err}", RuntimeError)
     Log.info(f"{package_name} has been loaded.")
     try:
         load_modules_recursively(package_path, package_name)
@@ -190,6 +195,30 @@ def get_package_name(path):
     last_part = os.path.basename(normalized_path)
 
     return last_part
+
+
+def unload_modules(package_path):
+    package_path = os.path.normpath(package_path)
+    package_name = get_package_name(package_path)
+    package = importlib.import_module(package_name)
+    pm.store_module(1, package)
+    if hasattr(package, 'unregister'):
+        try:
+            package.unregister()
+        except Exception as err:  # pylint: disable=broad-exception-caught
+            Log.warning(f"Failed to unregister plugin: {err}")
+
+    for module in pm.get_modules(1):
+        try:
+            unload_package(module)
+        except Exception as err:  # pylint: disable=broad-exception-caught
+            Log.warning(f"Failed to unload plugin: {err}")
+
+    try:
+        pm.clear_identifier(1)
+    except Exception as err:  # pylint: disable=broad-exception-caught
+        # 如果清除标识符时发生异常，则记录警告日志
+        Log.warning(f"Failed to clear identifier: {err}")
 
 
 if __name__ == '__main__':

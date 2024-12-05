@@ -6,13 +6,14 @@
 该模块定义了Blender插件开发辅助工具的全局设置面板和插件操作面板。
 包括了用户界面的布局、插件加载和卸载的功能操作。
 """
-
+import os
 import webbrowser
 import bpy  # pylint: disable=import-error
 
 from ..handler import package_mgr
-from ..data import py_models as pm
-from ..handler.watch_handler import toggle_watcher, reload_modules_callback
+from ..handler.package_mgr import unload_modules
+from ..handler.watch_handler import (toggle_watcher,
+                                     reload_modules_callback)
 from ..util.logger import Log
 
 
@@ -61,16 +62,7 @@ class PluginPanel1(bpy.types.Panel):
             :param context: Blender上下文，包含了当前场景、对象等信息。
             :return: 返回一个集合，表示操作完成。
             """
-            Log.info(f"Unload plugin:{context.scene.plugin_path}")
-            for module in pm.get_modules(1):
-                try:
-                    package_mgr.unload_package(module)
-                except Exception as err:
-                    Log.warning(f"Failed to unload plugin: {err}")
-
-            pm.clear_identifier(1)
-
-            Log.info(f"Plugin {context.scene.plugin_path} unloaded")
+            unload_modules(context.scene.plugin_path)
             return {'FINISHED'}
 
     class ReloadPlugin(bpy.types.Operator):
@@ -95,19 +87,7 @@ class PluginPanel1(bpy.types.Panel):
             - {'FINISHED'}: 表示操作完成。
             """
             # 遍历所有已加载的插件模块并尝试卸载它们
-            for module in pm.get_modules(1):
-                try:
-                    package_mgr.unload_package(module)
-                except Exception as err:
-                    # 如果卸载插件时发生异常，则记录警告日志
-                    Log.warning(f"Failed to unload plugin: {err}")
-
-            # 尝试清除特定标识符，为加载新插件做准备
-            try:
-                pm.clear_identifier(1)
-            except Exception as err:
-                # 如果清除标识符时发生异常，则记录警告日志
-                Log.warning(f"Failed to clear identifier: {err}")
+            unload_modules(context.scene.plugin_path)
 
             # 加载新的插件包，根据当前场景的插件路径
             package_mgr.load_package(context.scene.plugin_path)
