@@ -52,8 +52,9 @@ have occurred, but it should still be used with caution. (Detection interval: 1.
 
 - Currently Supported
     - windows-x64
-- Planned Support
-    - macos-arm64 (Currently no Mac device available)
+- Not planning to support at this time
+    - macos-arm64 (I've found that adapting for Mac is more difficult than I imagined, some features of this plugin
+      simply cannot be implemented on Mac)
 - Not Planned
     - linux (Unless major changes occur, no plans to support)
 
